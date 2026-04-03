@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# system_info
+#  pulls useful information such as manufacturer, serial number, and model
+#  from bios, processor and RAM info, and lists attached storage devices
+#   mrvanhorn, 03Apr2026
+
+# manufacturer information
+maker=`dmidecode --type system | grep Manufacturer | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+
+# the PowerSpecs have a Manufacturer of "MicroElectronics"
+if [[ $maker = "MicroElectronics" ]]; then
+ maker="PowerSpec"
+fi
+
+model=`dmidecode --type system | grep "Product Name" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+sn=`dmidecode --type system | grep "Serial Number" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+
+# CPU information
+numthreads=`lscpu | grep "^CPU(s):" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+corespersocket=`lscpu | grep "^Core(s) per socket:" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+threadspercore=`lscpu | grep "^Thread(s) per core:" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+numprocessors=`echo "$numthreads/$corespersocket/$threadspercore" | bc`
+processormodel=`lscpu | grep "^Model name:" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+
+# OS information
+if [ -f /etc/os-release ]; then
+ os=`grep PRETTY_NAME /etc/os-release | gawk -F"=" '{print $2}'`
+elif [ -f /etc/centos-release ]; then
+ os=`cat /etc/centos-release`
+else
+ os="unknown"
+fi
+
+# RAM information
+ramamountraw=`free -m | grep Mem | gawk -F: '{print $2}' | gawk -F" " '{print $1}'`
+ramamountgigs=`echo "(($ramamountraw+4000)/8000)*8" | bc`
+ramtype=`dmidecode --type memory | sed 's/^[[:space:]]*//' | grep ^Type: | grep -v Unknown | uniq | gawk -F": " '{print $2}'`
+
+# output
+echo ""
+echo "$maker $model"
+echo "Serial Number: $sn"
+echo ""
+echo "$numprocessors x $corespersocket-core $processormodel"
+echo "with a total of $numthreads threads"
+echo ""
+echo "${ramamountgigs}GB of ${ramtype} RAM"
+echo ""
+lsblk | grep -v ^loop
+echo ""
+echo "running $os"
+echo ""
+
