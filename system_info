@@ -5,6 +5,8 @@
 #  from bios, processor and RAM info, and lists attached storage devices
 #   mrvanhorn, 03Apr2026
 #
+#  add bios version
+#   mrvanhorn, 23Jul2026
 
 # manufacturer information
 maker=`dmidecode --type system | grep Manufacturer | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
@@ -16,6 +18,7 @@ fi
 
 model=`dmidecode --type system | grep "Product Name" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
 sn=`dmidecode --type system | grep "Serial Number" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
+biosversion=`dmidecode --type bios | grep Version | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
 
 # CPU information
 numthreads=`lscpu | grep "^CPU(s):" | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
@@ -42,6 +45,7 @@ ramtype=`dmidecode --type memory | sed 's/^[[:space:]]*//' | grep ^Type: | grep 
 echo ""
 echo "$maker $model"
 echo "Serial Number: $sn"
+echo "BIOS Version: $biosversion"
 echo ""
 echo "$numprocessors x $corespersocket-core $processormodel"
 echo "with a total of $numthreads threads"
