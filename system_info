@@ -4,6 +4,7 @@
 #  pulls useful information such as manufacturer, serial number, and model
 #  from bios, processor and RAM info, and lists attached storage devices
 #   mrvanhorn, 03Apr2026
+#
 
 # manufacturer information
 maker=`dmidecode --type system | grep Manufacturer | gawk -F: '{print $2}' | sed 's/^[[:space:]]*//'`
