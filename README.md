@@ -24,6 +24,7 @@ Serial Number: 2UA3282N1N
 with a total of 8 threads
 
 32GB of DDR3 RAM
+using 4 DIMMs with 0 empty DIMM slots
 
 NAME               MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 sda                  8:0    0 931.5G  0 disk 
@@ -40,8 +41,10 @@ sdb                  8:16   0 931.5G  0 disk
 sdc                  8:32   0 931.5G  0 disk 
 ├─sdc1               8:33   0 931.5G  0 part 
 └─sdc9               8:41   0     8M  0 part 
+sdd                  8:48   0   3.6T  0 disk 
+├─sdd1               8:49   0    16M  0 part 
+└─sdd2               8:50   0   3.6T  0 part /4tbusb
 sr0                 11:0    1  1024M  0 rom  
 
 running "AlmaLinux 9.7 (Moss Jungle Cat)"
-
 </pre>
